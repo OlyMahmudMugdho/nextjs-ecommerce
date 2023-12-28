@@ -15,5 +15,25 @@ model products {
   name        String
   price       Float
   updatedAt   DateTime @updatedAt
+  CartItem    CartItem[]
+}
 
+model Cart {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  items       CartItem[] 
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+
+  @@map("carts")
+}
+
+model CartItem {
+  id          String   @id @default(auto()) @map("_id") @db.ObjectId
+  productId   String   @db.ObjectId
+  product     products @relation(fields: [productId], references: [id], onDelete : Cascade )
+  quantity    Int
+  cartId      String   @db.ObjectId
+  Cart        Cart     @relation(fields: [cartId], references: [id], onDelete : Cascade)
+
+  @@map("cartitems")
 }
